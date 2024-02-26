@@ -117,7 +117,7 @@ def play(env, transpose=True, zoom=None, callback=None, keys_to_action=None):
                 record_total += time.time() - start
                 record_num += 1
             #print(info['sensor'])
-            print("Play mode: reward %f" % rew)
+            print("Play mode: reward %f" % rew) # printed in terminal
         for p_key in pressed_keys:
             action = keys_to_action[(p_key, )]
             prev_obs = obs

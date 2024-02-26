@@ -38,7 +38,7 @@ class BaseEnv(gym.Env):
         self.resolution = config["resolution"]
         self.tracking_camera = tracking_camera
         self.robot = None
-        target_orn, target_pos   = config["target_orn"], self.config["target_pos"]
+        # target_orn, target_pos   = config["target_orn"], self.config["target_pos"]
         initial_orn, initial_pos = config["initial_orn"], self.config["initial_pos"]
 
         if config["display_ui"]:

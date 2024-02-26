@@ -13,10 +13,10 @@ import cv2
 CALC_OBSTACLE_PENALTY = 0
 
 tracking_camera = {
-    'yaw': 110,
+    'yaw': 110, # husky robot's heading angle w.r.t husky camera in GUI
     'z_offset': 0.5,
-    'distance': 1,
-    'pitch': -20
+    'distance': 1, # distance from the husky robot (10)
+    'pitch': -20 # (-90)
 }
 
 tracking_camera_top = {

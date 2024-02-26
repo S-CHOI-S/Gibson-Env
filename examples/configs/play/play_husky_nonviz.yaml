@@ -1,15 +1,15 @@
-envname: HuskyNavigateEnv
-model_id: space7
+envname: HuskyNavigateEnv # environment name, make sure it is the same as the class name of the env
+model_id: space3 # choose space (scene)
 target_orn: [0, 0, 1.57]
 target_pos: [-14.3, 45.07, 0.5]
-initial_orn: [0, 0, 4.71]
-initial_pos: [-14.3, 5, 1.2]
-fov: 1.57
+initial_orn: [0, 0, 4.71] # model initial orientation [roll, pith, yaw]
+initial_pos: [0, 7, 0.5] # model initial position [x, y, z]
+fov: 1.57 # field of view for the camera
 is_discrete: true
 
 use_filler: true
-display_ui: true
-show_diagnostics: false
+display_ui: true # use pygame window or not
+show_diagnostics: true
 ui_num: 2
 ui_components: [RGB_FILLED, DEPTH]
 random:
@@ -27,5 +27,5 @@ speed:
   timestep: 0.001
   frameskip: 10
 
-mode: gui #gui|headless
+mode: gui #gui|headless # follow the robot true|false
 verbose: false

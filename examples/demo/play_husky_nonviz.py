@@ -3,6 +3,7 @@ from gibson.utils.play import play
 import argparse
 import os
 
+# yaml file PWD: ~/Gibson/examples/configs/play
 config_file = os.path.join(os.path.dirname(os.path.realpath(__file__)), '..', 'configs', 'play', 'play_husky_nonviz.yaml')
 print(config_file)
 

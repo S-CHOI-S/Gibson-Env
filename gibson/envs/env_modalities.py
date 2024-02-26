@@ -205,6 +205,7 @@ class BaseRobotEnv(BaseEnv):
             pos = self.robot._get_scaled_position()
             orn = self.robot.get_orientation()
             pos = (pos[0], pos[1], pos[2] + self.tracking_camera['z_offset'])
+            # pos = (-10, 10, pos[2] + self.tracking_camera['z_offset']) # gui update (w.r.t. robot pos)
             pos = np.array(pos)
             dist = self.tracking_camera['distance'] / self.robot.mjcf_scaling
             p.resetDebugVisualizerCamera(dist, self.tracking_camera['yaw'], self.tracking_camera['pitch'], pos)
@@ -384,6 +385,7 @@ class CameraRobotEnv(BaseRobotEnv):
         sensor_state = BaseRobotEnv._reset(self)
         self.potential = self.robot.calc_potential()
         eye_pos, eye_quat = self.get_eye_pos_orientation()
+        eye_pos = [-14.3, 5, 1.2]
         pose = [eye_pos, eye_quat]
         
         observations = self.render_observations(pose)
