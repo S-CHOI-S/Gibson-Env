@@ -8,6 +8,7 @@ from PIL import Image
 
 from igibson.utils.assets_utils import get_scene_path
 
+np.set_printoptions(threshold=np.inf)
 
 def main():
     scene_id = "Rs"
@@ -32,7 +33,8 @@ def main():
         plt.imshow(trav_map)
 
     plt.show()
-    print(obstacle_map)
+    print(trav_map)
+    print(trav_map.shape)
 
 
 if __name__ == "__main__":
