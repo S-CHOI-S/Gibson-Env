@@ -216,6 +216,7 @@ class KeyboardController:
         """
         action = np.zeros(self.action_dim)
         keypress = self.get_keyboard_input()
+        print(keypress)
 
         if keypress is not None:
             # If the keypress is a number, the user is trying to select a specific joint to control
@@ -249,6 +250,15 @@ class KeyboardController:
                     if idx is not None:
                         action[idx] = val
 
+            elif keypress == "R":
+                action[0] = 1
+            elif keypress == "Q":
+                action[1] = 1
+            elif keypress == "S":
+                action[2] = 1
+            elif keypress == "T":
+                action[3] = 1
+
             sys.stdout.write("\033[K")
             print("Pressed {}. Action: {}".format(keypress, action))
             sys.stdout.write("\033[F")
@@ -259,6 +269,9 @@ class KeyboardController:
         # Possibly set the persistent gripper action
         if self.persistent_gripper_action is not None and self.keypress_mapping[" "]["val"] is not None:
             action[self.keypress_mapping[" "]["idx"]] = self.persistent_gripper_action
+
+        # print(action)
+        # print("===========================================")
 
         # Return action
         return action
@@ -422,7 +435,7 @@ def main(selection="user", headless=False, short_exec=False):
     s.import_object(robot)
 
     # Reset the robot
-    robot.set_position([-0.75, 1.0, 0])
+    robot.set_position([-0.75, 1.0, -0.02])
     robot.reset()
     robot.keep_still()
 
