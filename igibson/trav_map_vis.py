@@ -18,14 +18,16 @@ def main():
     floor_map = []
     floor_graph = []
 
-    with open(os.path.join("./data/g_dataset/gibson_v2_selected/Bonfield", "floors.txt"), "r") as f:
+    env_dir = "./data/g_dataset/gibson_v2_selected/Beach"
+
+    with open(os.path.join(env_dir, "floors.txt"), "r") as f:
         floors = sorted(list(map(float, f.readlines())))
         print("floor_heights", floors)
 
     for f in range(len(floors)):
-        trav_map = Image.open(os.path.join("./data/g_dataset/gibson_v2_selected/Bonfield", "floor_trav_{}.png".format(f)))
-        obstacle_map = Image.open(os.path.join("./data/g_dataset/gibson_v2_selected/Bonfield", "floor_{}.png".format(f)))
-        render_map = Image.open(os.path.join("./data/g_dataset/gibson_v2_selected/Bonfield", "floor_render_{}.png".format(f)))
+        trav_map = Image.open(os.path.join(env_dir, "floor_trav_{}.png".format(f)))
+        obstacle_map = Image.open(os.path.join(env_dir, "floor_{}.png".format(f)))
+        render_map = Image.open(os.path.join(env_dir, "floor_render_{}.png".format(f)))
         trav_map = np.array(trav_map.resize((trav_map_size, trav_map_size)))
         obstacle_map = np.array(obstacle_map.resize((trav_map_size, trav_map_size)))
         render_map = np.array(render_map.resize((trav_map_size, trav_map_size)))
@@ -46,6 +48,8 @@ def main():
 
     render_map = Image.fromarray(render_map)
     render_map.paste(overlay_rgba, (0, 0), overlay_rgba)
+
+    render_map.save(os.path.join(env_dir, "render_obstacle_map.png"))
 
     plt.imshow(render_map)
     plt.show()
