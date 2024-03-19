@@ -212,6 +212,7 @@ endif()
 add_library(
   tinyobjloader MODULE
   cpp/tinyobjloader/tiny_obj_loader.cc
+  cpp/tinyobjloader/tiny_obj_loader.h
   cpp/tinyobjloader/tiny_obj_loader_decrypt.cc cpp/tinyobjloader/bindings.cc)
 target_link_libraries(tinyobjloader PRIVATE pybind11::module cryptopp-static)
 set_target_properties(

@@ -29,6 +29,9 @@
 
 #include "egl_mesh_renderer.h"
 
+#define GLM_ENABLE_EXPERIMENTAL
+#include <iostream>
+
 namespace py = pybind11;
 
 

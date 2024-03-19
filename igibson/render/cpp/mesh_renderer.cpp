@@ -72,6 +72,8 @@ using CryptoPP::CBC_Mode;
 
 #include "assert.h"
 
+#define GLM_ENABLE_EXPERIMENTAL
+
 using CryptoPP::byte;
 
 class Image {
