@@ -5,10 +5,14 @@ import cv2
 import matplotlib.pyplot as plt
 import numpy as np
 from PIL import Image
+import sys
 
 from igibson.utils.assets_utils import get_scene_path
 
+import torch
+
 np.set_printoptions(threshold=np.inf)
+torch.set_printoptions(threshold=sys.maxsize)
 
 def main():
     scene_id = "Rs"
@@ -36,8 +40,30 @@ def main():
         plt.figure(f, figsize=(12, 12))
         # plt.imshow(render_map)
 
+        obstacle_mask = np.zeros((1000, 1000), dtype=bool)
+        obstacle_mask = (trav_map == 0)
+        
+        masks = torch.from_numpy(obstacle_mask).to(dtype=torch.bool, device='cuda')
+        masks = ~masks
+        masks = masks.unsqueeze(0)
+
+        print(masks.size())
+    
+
+
     # plt.show()
-    # print(trav_map)
+    print(obstacle_mask.shape)
+    # print(obstacle_mask)
+    print("=================================================================\n")
+    print("=================================================================\n")
+    print("=================================================================\n")
+    print("=================================================================\n")
+    print("=================================================================\n")
+    print(masks)
+    print(masks.size())
+    false_count = torch.sum(~masks)  # ~ 연산자를 사용하여 True를 False로, False를 True로 바꾸고 True의 개수를 센 후, 전체 요소 수에서 빼줍니다.
+    print("Number of False elements:", false_count.item())
+
     # print(trav_map.shape)
 
     trav_map_modified = np.where(trav_map > 0, 0, 255).astype(np.uint8)
