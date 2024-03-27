@@ -144,6 +144,12 @@ class KeyboardController:
         self.populate_keypress_mapping()
         self.time_last_keyboard_input = time.time()
 
+        self.kp = 1
+        self.ki = 0.1
+        self.kd = 0.05
+        self.prev_error = 0
+        self.integral = 0
+
     def populate_keypress_mapping(self):
         """
         Populates the mapping @self.keypress_mapping, which maps keypresses to action info:
@@ -339,6 +345,80 @@ class KeyboardController:
         # print("*" * 30)
         # print()
 
+    def calculate_steering_angle(self, desired_state, current_state):
+        error = desired_state - current_state
+        print("here error: ", error, "/n")
+
+        proportional = self.kp * error
+        print("here proportional: ", proportional, "/n")
+        self.integral += error
+        integral = self.ki * self.integral
+        print("here integral: ", integral, "/n")
+        derivative = self.kd * (error - self.prev_error)
+        print("here derivative: ", derivative, "/n")
+        steering_angle = proportional + integral + derivative
+        print("here steering_angle: ", steering_angle, "/n")
+
+        self.prev_error = error
+
+        return steering_angle
+    
+
+    def set_steering_action(self, robot):
+        """
+        :return Array: Generated action vector based on received user inputs from the keyboard
+        """
+        action = np.zeros(self.action_dim)
+        keypress = self.get_keyboard_input()
+
+        if keypress is not None:
+            # If the keypress is a number, the user is trying to select a specific joint to control
+            if keypress.isnumeric():
+                if int(keypress) in self.joint_control_idx:
+                    self.current_joint = int(keypress)
+
+            elif keypress in self.keypress_mapping:
+                action_info = self.keypress_mapping[keypress]
+                idx, val = action_info["idx"], action_info["val"]
+
+                # If there is no index, the user is controlling a joint with "[" and "]". Set the idx to self.current_joint
+                if idx is None and self.current_joint != -1:
+                    idx = self.current_joint
+
+                if idx is not None:
+                    action[idx] = val
+
+            if keypress == "R": # move forward
+                action = [0.1, 0.1, 0.1, 0.1]
+
+            if keypress == "T": # move rear
+                action = [-0.1, -0.1, -0.1, -0.1]
+
+            if keypress == "Q": # turn left
+                action = [0.1, 0.1, 0.1, 0.1]
+
+            if keypress == "S": # turn right
+                action = [0.1, 0.1, 0.1, 0.1]
+
+            # sys.stdout.write("\033[K")
+            # print("Pressed {}. Action: {}".format(keypress, action))
+            # sys.stdout.write("\033[F")
+
+            # robot_des_position = [-1, 0.3, 0.244]
+            # robot_position_error = robot_des_position - robot.get_position()
+            # print(robot_position_error)
+                
+            robot_des_orientation = 0 # desired yaw angle
+
+            print(self.calculate_steering_angle(robot_des_orientation, robot.get_rpy()[2]))
+            # print(robot.get_rpy()[2])
+
+        # Update last keypress
+        self.last_keypress = keypress
+
+        # Return action
+        return action
+
 
 def main(selection="user", headless=False, short_exec=False):
     """
@@ -415,7 +495,7 @@ def main(selection="user", headless=False, short_exec=False):
     s.import_object(robot)
 
     # Reset the robot
-    robot.set_position([-0.75, 0.3, -0.01]) # robot.set_position([-0.75, 1.0, 0])
+    robot.set_position([-0.75, 0.3, 0]) # robot.set_position([-0.75, 1.0, 0])
     robot.reset()
     robot.keep_still()
 
@@ -441,13 +521,15 @@ def main(selection="user", headless=False, short_exec=False):
     step = 0
     while step != max_steps:
         action = (
-            # action_generator.get_random_action() if control_mode == "random" else action_generator.get_teleop_action()
-            [0.9, 0.9, 0, 0] # HERE
+            action_generator.get_random_action() if control_mode == "random" else action_generator.set_steering_action(robot)
+            # [0.1, 0.1, 0.1, 0.1] # HERE
         )
         robot.apply_action(action)
         # robot.set_position([-0.75, 0.0, -0.05])
         # print(robot.get_position()) # real robot position
         # print(robot.get_rpy()) # real robot orientation
+        # print(robot.get_linear_velocity()) # real robot linear velocity
+        # print(robot.get_angular_velocity()) # real robot angular velocity
         # print("======================")
         for _ in range(10):
             s.step()
